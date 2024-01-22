@@ -1,13 +1,21 @@
 package com.mlproject.quickLease.Services;
 
+import com.mlproject.quickLease.DTOs.AuthenticationResponseDto;
+import com.mlproject.quickLease.DTOs.LoginRequestDto;
 import com.mlproject.quickLease.DTOs.UserDto;
 import com.mlproject.quickLease.Exceptions.UserAlreadyExistException;
 import com.mlproject.quickLease.Exceptions.UserNotFoundException;
 import com.mlproject.quickLease.Entities.UserEntity;
 import com.mlproject.quickLease.Repositories.UserRepository;
+import com.mlproject.quickLease.Security.JwtService;
 import jakarta.transaction.Transactional;
-import org.apache.catalina.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +23,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+    private JwtService jwtService;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     // TODO: Add pagination
@@ -56,7 +69,7 @@ public class UserServiceImpl implements UserService{
         userRepository.delete(deleteUser);
     }
 
-    public String registerUser(UserDto userDto){
+    public AuthenticationResponseDto registerUser(UserDto userDto){
         UserEntity user = mapDtoToEntity(userDto);
         boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
         if(userExists){
@@ -65,8 +78,17 @@ public class UserServiceImpl implements UserService{
         else{
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             userRepository.save(user);
-            return "User with email " + user.getEmail() + " is created";
+            var jwtToken = jwtService.generateToken(user);
+            return AuthenticationResponseDto.builder().token(jwtToken).build();
         }
+    }
+
+    public AuthenticationResponseDto loginUser(LoginRequestDto loginRequestDto){
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserEntity user = userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(() -> new UserNotFoundException("User with email " + loginRequestDto.getEmail() + " not found"));
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponseDto.builder().token(jwtToken).build();
     }
 
     /// BEST practice to create our own mapping functions

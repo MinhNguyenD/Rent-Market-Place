@@ -1,5 +1,7 @@
 package com.mlproject.quickLease.Services;
 
+import com.mlproject.quickLease.DTOs.AuthenticationResponseDto;
+import com.mlproject.quickLease.DTOs.LoginRequestDto;
 import com.mlproject.quickLease.DTOs.UserDto;
 import com.mlproject.quickLease.Entities.UserEntity;
 
@@ -13,5 +15,6 @@ public interface UserService {
     UserDto saveUser(UserDto user);
 
     void deleteUserById(int id);
-    String registerUser(UserDto userDto);
+    AuthenticationResponseDto registerUser(UserDto userDto);
+    AuthenticationResponseDto loginUser(LoginRequestDto loginRequestDto);
 }
