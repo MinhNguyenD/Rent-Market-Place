@@ -41,11 +41,12 @@ public class UserEntity implements UserDetails {
     @Column(name="pass_word")
     private String password;
 
-    public UserEntity(String fullName, String email, String phoneNumber, Date dateOfBirth, boolean gender) {
+    public UserEntity(String fullName, String email, String password, String phoneNumber, Date dateOfBirth, boolean gender) {
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.dateOfBirth = dateOfBirth;
+        this.password = password;
         this.gender = gender;
     }
 
