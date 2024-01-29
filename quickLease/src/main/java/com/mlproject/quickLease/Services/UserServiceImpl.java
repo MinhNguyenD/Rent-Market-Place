@@ -11,7 +11,6 @@ import com.mlproject.quickLease.Security.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -97,7 +96,7 @@ public class UserServiceImpl implements UserService{
             return null;
         }
         UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
+        userDto.setId(user.getUserId());
         userDto.setEmail(user.getEmail());
         userDto.setFullName(user.getFullName());
         userDto.setPhoneNumber(user.getPhoneNumber());
@@ -108,7 +107,7 @@ public class UserServiceImpl implements UserService{
 
     private UserEntity mapDtoToEntity(UserDto userDto) {
         UserEntity user = new UserEntity();
-        user.setId(userDto.getId());
+        user.setUserId(userDto.getId());
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         user.setFullName(userDto.getFullName());
