@@ -9,7 +9,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
     @Mapping(source = "location", target = "location")
-    @Mapping(ignore = true)
-    Room mapToEntity(Room room, RoomDto roomDto, Location location);
+    @Mapping(target = "id",ignore = true)
+    Room mapToEntity(RoomDto roomDto, Location location);
+
+    @Mapping(target = "locationId", expression = "java(room.getLocation().getId())")
     RoomDto mapToDto(Room room);
 }

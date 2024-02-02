@@ -18,7 +18,7 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name ="id")
-    private int locationId;
+    private int id;
 
     @Column(name = "location_name")
     @NotBlank(message = "Location name should not be null or empty")

@@ -2,6 +2,7 @@ package com.mlproject.quickLease.controller;
 
 import com.mlproject.quickLease.dto.UserDto;
 import com.mlproject.quickLease.service.UserService;
+import org.apache.logging.log4j.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,17 +33,19 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user){
+    public ResponseEntity<String> createUser(@RequestBody UserDto user){
         // if body contains id != 0 -> set it to 0 because this is create not update
         user.setId(0);
-        UserDto newUser = userService.saveUser(user);
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+        userService.saveUser(user);
+        String message = "Created user with id " + user.getId();
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable String id, @RequestBody UserDto user) {
-        UserDto updateUser = userService.saveUser(user);
-        return new ResponseEntity<>(updateUser, HttpStatus.OK);
+    public ResponseEntity<String> updateUser(@RequestBody UserDto user) {
+        userService.saveUser(user);
+        String message  = "Updated user with id " + user.getId();
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
