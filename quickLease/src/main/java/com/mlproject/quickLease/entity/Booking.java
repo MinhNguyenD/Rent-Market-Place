@@ -41,5 +41,5 @@ public class Booking {
 
     @NotNull
     @Column(name = "num_guest")
-    private int guestQuantity;
+    private int numGuest;
 }
