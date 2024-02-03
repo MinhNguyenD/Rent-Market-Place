@@ -55,9 +55,20 @@ public class UserServiceImpl implements UserService{
     // since we are modifying the db, need to add transaction notation on SERVICE layer not DAO
     @Transactional
     @Override
-    public void saveUser(UserDto userDto) {
+    public UserDto createUser(UserDto userDto) {
         UserEntity newUser = mapDtoToEntity(userDto);
         userRepository.save(newUser);
+        return userDto;
+    }
+
+    @Transactional
+    @Override
+    public UserDto updateUser(UserDto userDto) {
+        userRepository.findById(userDto.getId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+        UserEntity updateUser = mapDtoToEntity(userDto);
+        updateUser.setUserId(userDto.getId());
+        userRepository.save(updateUser);
+        return userDto;
     }
 
     @Transactional

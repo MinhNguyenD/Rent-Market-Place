@@ -7,6 +7,7 @@ import com.mlproject.quickLease.exception.RoomNotFoundException;
 import com.mlproject.quickLease.mapper.RoomMapper;
 import com.mlproject.quickLease.repository.LocationRepository;
 import com.mlproject.quickLease.repository.RoomRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,14 +33,27 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void saveRoom(RoomDto roomDto) {
+    @Transactional
+    public RoomDto createRoom(RoomDto roomDto) {
         Location location = locationRepository.findById(roomDto.getLocationId()).orElseThrow(() -> new LocationNotFoundException("Location not found"));
         Room room =  roomMapper.mapToEntity(roomDto, location);
-        room.setId(roomDto.getId());
         roomRepository.save(room);
+        return roomDto;
     }
 
     @Override
+    @Transactional
+    public RoomDto updateRoom(RoomDto roomDto) {
+        roomRepository.findById(roomDto.getId()).orElseThrow(() -> new RoomNotFoundException("Room not found"));
+        Location location = locationRepository.findById(roomDto.getLocationId()).orElseThrow(() -> new LocationNotFoundException("Location not found"));
+        Room room = roomMapper.mapToEntity(roomDto,location);
+        room.setId(roomDto.getId());
+        roomRepository.save(room);
+        return roomDto;
+    }
+
+    @Override
+    @Transactional
     public void deleteRoom(int id) {
         Room room = roomRepository.findById(id).orElseThrow(() -> new RoomNotFoundException("Room not found"));
         roomRepository.delete(room);

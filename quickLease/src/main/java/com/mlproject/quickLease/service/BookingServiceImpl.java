@@ -11,6 +11,7 @@ import com.mlproject.quickLease.mapper.BookingMapper;
 import com.mlproject.quickLease.repository.BookingRepository;
 import com.mlproject.quickLease.repository.RoomRepository;
 import com.mlproject.quickLease.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +36,25 @@ public class BookingServiceImpl implements BookingService{
     }
 
     @Override
-    public void saveBooking(BookingDto bookingDto) {
+    @Transactional
+    public BookingDto createBooking(BookingDto bookingDto) {
+        UserEntity user = userRepository.findById(bookingDto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found in this booking"));
+        Room room = roomRepository.findById(bookingDto.getRoomId()).orElseThrow(() -> new RoomNotFoundException("Room not found in this booking"));
+        Booking booking = bookingMapper.mapToEntity(bookingDto, user, room);
+        bookingRepository.save(booking);
+        return bookingDto;
+    }
+
+    @Override
+    @Transactional
+    public BookingDto updateBooking(BookingDto bookingDto) {
+        bookingRepository.findById(bookingDto.getId()).orElseThrow(()->new BookingNotFoundException("Booking not found"));
         UserEntity user = userRepository.findById(bookingDto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found in this booking"));
         Room room = roomRepository.findById(bookingDto.getRoomId()).orElseThrow(() -> new RoomNotFoundException("Room not found in this booking"));
         Booking booking = bookingMapper.mapToEntity(bookingDto, user, room);
         booking.setId(bookingDto.getId());
         bookingRepository.save(booking);
+        return bookingDto;
     }
 
 

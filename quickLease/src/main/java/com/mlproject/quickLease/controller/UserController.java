@@ -36,14 +36,14 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestBody UserDto user){
         // if body contains id != 0 -> set it to 0 because this is create not update
         user.setId(0);
-        userService.saveUser(user);
+        userService.createUser(user);
         String message = "Created user with id " + user.getId();
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateUser(@RequestBody UserDto user) {
-        userService.saveUser(user);
+        userService.updateUser(user);
         String message  = "Updated user with id " + user.getId();
         return new ResponseEntity<>(message,HttpStatus.OK);
     }

@@ -8,11 +8,11 @@ import lombok.Data;
 public class RoomDto {
     private int id;
     @NotNull
-    private int numBedroom;
-    @NotNull
-    private int numBed;
+    private int numBedRoom;
     @NotNull
     private int numBathRoom;
+    @NotNull
+    private int numBed;
     @NotBlank
     private String roomDescription;
     @NotNull

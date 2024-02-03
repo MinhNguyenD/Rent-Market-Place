@@ -1,7 +1,6 @@
 package com.mlproject.quickLease.controller;
 
 import com.mlproject.quickLease.dto.BookingDto;
-import com.mlproject.quickLease.entity.Booking;
 import com.mlproject.quickLease.service.BookingService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,24 +26,19 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createBooking(@RequestBody BookingDto bookingDto){
-        bookingService.saveBooking(bookingDto);
-        String message = "Created booking with ID " + bookingDto.getId();
-        return new ResponseEntity<>(message,HttpStatus.CREATED);
+    public ResponseEntity<BookingDto> createBooking(@RequestBody BookingDto bookingDto){
+        return new ResponseEntity<>(bookingService.createBooking(bookingDto),HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<String> updateBooking(@RequestBody BookingDto bookingDto){
-        bookingService.saveBooking(bookingDto);
-        String message = "Updated booking with ID " + bookingDto.getId();
-        return new ResponseEntity<>(message,HttpStatus.OK);
+    public ResponseEntity<BookingDto> updateBooking(@RequestBody BookingDto bookingDto){
+        return new ResponseEntity<>(bookingService.updateBooking(bookingDto),HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBooking(@PathVariable int id){
+    public ResponseEntity<Void> deleteBooking(@PathVariable int id){
         bookingService.deleteBooking(id);
-        String message = "Deleted booking with ID " + id;
-        return new ResponseEntity<>(message,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

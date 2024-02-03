@@ -11,7 +11,8 @@ public interface UserService {
 
     UserDto getUser(int id);
 
-    void saveUser(UserDto user);
+    UserDto createUser(UserDto userDto);
+    UserDto updateUser(UserDto userDto);
 
     void deleteUser(int id);
     AuthenticationResponseDto registerUser(UserDto userDto);

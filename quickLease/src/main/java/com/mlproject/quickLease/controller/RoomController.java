@@ -27,23 +27,18 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createRoom(@RequestBody RoomDto roomDto){
-        roomService.saveRoom(roomDto);
-        String message = "Created room with ID " + roomDto.getId();
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+    public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto){
+        return new ResponseEntity<>(roomService.createRoom(roomDto), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<String> updateRoom(@RequestBody RoomDto roomDto){
-        roomService.saveRoom(roomDto);
-        String message = "Updated room with ID " + roomDto.getId();
-        return new ResponseEntity<>(message, HttpStatus.OK);
+    public ResponseEntity<RoomDto> updateRoom(@RequestBody RoomDto roomDto){
+        return new ResponseEntity<>(roomService.updateRoom(roomDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteRoom(@PathVariable int id){
+    public ResponseEntity<Void> deleteRoom(@PathVariable int id){
         roomService.deleteRoom(id);
-        String message = "Deleted room with ID " + id;
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

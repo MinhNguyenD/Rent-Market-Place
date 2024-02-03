@@ -25,12 +25,12 @@ public class Comment {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "room_id", referencedColumnName = "id")
-    private Room roomId;
+    private Room room;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity userId;
+    private UserEntity user;
 
     @Column(name= "comment_date")
     @NotNull(message = "Comment date cannot be null")

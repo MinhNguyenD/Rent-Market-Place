@@ -4,11 +4,13 @@ import com.mlproject.quickLease.dto.RoomDto;
 import java.util.List;
 
 public interface RoomService {
-    public List<RoomDto> getAllRooms();
+    List<RoomDto> getAllRooms();
 
-    public RoomDto getRoom(int id);
+    RoomDto getRoom(int id);
 
-    public void saveRoom(RoomDto roomDto);
+    RoomDto createRoom(RoomDto roomDto);
 
-    public void deleteRoom(int id);
+    RoomDto updateRoom(RoomDto roomDto);
+
+    void deleteRoom(int id);
 }
